@@ -4,6 +4,9 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <SpaRoot>clientapp</SpaRoot>
+	  <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
+	  <SpaProxyServerUrl>https://localhost:3000</SpaProxyServerUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +22,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
+	  <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
+		  <Version>9.*-*</Version>
+	  </PackageReference>
   </ItemGroup>
 
 </Project>

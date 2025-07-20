@@ -4,7 +4,7 @@ using TicketingSystem.UseCases.Users;
 namespace TicketingSystem.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
         private readonly CreateUser _createUser;

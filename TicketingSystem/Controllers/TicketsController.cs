@@ -4,7 +4,7 @@ using TicketingSystem.UseCases.Tickets;
 namespace TicketingSystem.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class TicketsController : ControllerBase
     {
         private readonly CreateTicket _createTicket;
@@ -12,14 +12,26 @@ namespace TicketingSystem.Controllers
         private readonly EscalateTicket _escalateTicket;
         private readonly AddCommentToTicket _addComment;
         private readonly SolveTicket _solveTicket;
+        private readonly GetAllTickets _getAllTickets;
 
-        public TicketsController(CreateTicket createTicket, GetTicket getTicket, EscalateTicket escalateTicket, AddCommentToTicket addComment, SolveTicket solveTicket)
+        public TicketsController(CreateTicket createTicket, GetTicket getTicket, EscalateTicket escalateTicket, AddCommentToTicket addComment, SolveTicket solveTicket, GetAllTickets getAllTickets)
         {
             _createTicket = createTicket;
             _getTicket = getTicket;
             _escalateTicket = escalateTicket;
             _addComment = addComment;
             _solveTicket = solveTicket;
+            _getAllTickets = getAllTickets;
+        }
+
+        [HttpGet]
+        public async Task<IResult> GetAll(CancellationToken cancellationToken)
+        {
+            var request = new GetAllTicketsRequest();
+
+            var response = await _getAllTickets.Handle(request, cancellationToken);
+
+            return Results.Ok(response);
         }
 
         [HttpGet("{id:int}")]
