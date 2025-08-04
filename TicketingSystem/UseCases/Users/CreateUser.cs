@@ -30,7 +30,7 @@ public class CreateUser : IUseCase<CreateUserRequest, CreateUserResult>
 
         if(existingUser is not null)
         {
-            return new UserNameAlreadyExists();
+            return new UsernameAlreadyExists();
         }
 
         var user = new User
@@ -52,10 +52,10 @@ public record CreateUserRequest(string Username, string DisplayName);
 [Result<int, CreateUserError>]
 public partial class CreateUserResult;
 
-[Union<UserNameAlreadyExists, UsernameNotValid, DisplayNameNotValid>]
+[Union<UsernameAlreadyExists, UsernameNotValid, DisplayNameNotValid>]
 public partial class CreateUserError;
 
-public record UserNameAlreadyExists;
+public record UsernameAlreadyExists;
 
 public record UsernameNotValid(string Reason);
 public record DisplayNameNotValid(string Reason);

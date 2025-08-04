@@ -26,7 +26,7 @@ public class TicketTests
     {
         var client = _factory.CreateClient();
 
-        var response = await client.GetAsync("/tickets/0");
+        var response = await client.GetAsync("/api/tickets/0");
 
         response.EnsureSuccessStatusCode();
 
@@ -41,7 +41,7 @@ public class TicketTests
         var client = _factory.CreateClient();
         var ticketId = await CreateTicketAndGetId();
 
-        var response = await client.GetAsync($"/tickets/{ticketId}");
+        var response = await client.GetAsync($"/api/tickets/{ticketId}");
 
         response.EnsureSuccessStatusCode();
 
@@ -62,7 +62,7 @@ public class TicketTests
             Body = "Please help me. I cannot continue to the next screen. Something has happened that is not allowing me to move forward. Please help thanks!",
             UserId = userId
         };
-        var response = await client.PostAsJsonAsync("/tickets", ticketRequest);
+        var response = await client.PostAsJsonAsync("/api/tickets", ticketRequest);
 
         response.EnsureSuccessStatusCode();
 
@@ -77,7 +77,7 @@ public class TicketTests
     public async Task CreateTicket_Returns_Err_With_No_Subject()
     {
         var client = _factory.CreateClient();
-        var response = await client.PostAsJsonAsync("/tickets", new CreateTicketHttpRequest
+        var response = await client.PostAsJsonAsync("/api/tickets", new CreateTicketHttpRequest
         {
             Subject = "",
             Body = "Please help me. I cannot continue to the next screen. Something has happened that is not allowing me to move forward. Please help thanks!"
@@ -95,7 +95,7 @@ public class TicketTests
     public async Task CreateTicket_Returns_Err_With_Invalid_User_Id()
     {
         var client = _factory.CreateClient();
-        var response = await client.PostAsJsonAsync("/tickets", new CreateTicketHttpRequest
+        var response = await client.PostAsJsonAsync("/api/tickets", new CreateTicketHttpRequest
         {
             Subject = "This is a subject",
             Body = "Please help me. I cannot continue to the next screen. Something has happened that is not allowing me to move forward. Please help thanks!"
@@ -113,7 +113,7 @@ public class TicketTests
     public async Task CreateTicket_Returns_Err_With_No_Body()
     {
         var client = _factory.CreateClient();
-        var response = await client.PostAsJsonAsync("/tickets", new CreateTicketHttpRequest
+        var response = await client.PostAsJsonAsync("/api/tickets", new CreateTicketHttpRequest
         {
             Subject = "I have a problem",
             Body = ""
@@ -131,7 +131,7 @@ public class TicketTests
     public async Task EscalateTicket_Returns_Err_When_Ticket_Not_Found()
     {
         var client = _factory.CreateClient();
-        var response = await client.PostAsync("/tickets/0/escalate", null);
+        var response = await client.PostAsync("/api/tickets/0/escalate", null);
 
         response.EnsureSuccessStatusCode();
 
@@ -147,7 +147,7 @@ public class TicketTests
         var client = _factory.CreateClient();
         var newTicketId = await CreateTicketAndGetId();
         await Solve(newTicketId);
-        var response = await client.PostAsync($"/tickets/{newTicketId}/escalate", null);
+        var response = await client.PostAsync($"/api/tickets/{newTicketId}/escalate", null);
 
         response.EnsureSuccessStatusCode();
 
@@ -164,7 +164,7 @@ public class TicketTests
         var newTicketId = await CreateTicketAndGetId();
         await Escalate(newTicketId);
 
-        var response = await client.PostAsync($"/tickets/{newTicketId}/escalate", null);
+        var response = await client.PostAsync($"/api/tickets/{newTicketId}/escalate", null);
 
         response.EnsureSuccessStatusCode();
 
@@ -180,7 +180,7 @@ public class TicketTests
         var client = _factory.CreateClient();
         var newTicketId = await CreateTicketAndGetId();
 
-        var response = await client.PostAsync($"/tickets/{newTicketId}/escalate", null);
+        var response = await client.PostAsync($"/api/tickets/{newTicketId}/escalate", null);
 
         response.EnsureSuccessStatusCode();
 
@@ -196,7 +196,7 @@ public class TicketTests
         var userId = await CreateUser();
         var client = _factory.CreateClient();
 
-        var response = await client.PostAsJsonAsync($"/tickets/{ticketId}/comments", new AddCommentHttpRequest
+        var response = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/comments", new AddCommentHttpRequest
         {
             Text = "Comment",
             UserId = userId
@@ -215,7 +215,7 @@ public class TicketTests
         var client = _factory.CreateClient();
         var userId = await CreateUser();
 
-        var response = await client.PostAsJsonAsync($"/tickets/0/comments", new AddCommentHttpRequest
+        var response = await client.PostAsJsonAsync($"/api/tickets/0/comments", new AddCommentHttpRequest
         {
             Text = "Comment",
             UserId = userId
@@ -235,7 +235,7 @@ public class TicketTests
         var client = _factory.CreateClient();
         var ticketId = await CreateTicketAndGetId();
 
-        var response = await client.PostAsJsonAsync($"/tickets/{ticketId}/comments", new AddCommentHttpRequest
+        var response = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/comments", new AddCommentHttpRequest
         {
             Text = "Comment",
             UserId = 0
@@ -256,7 +256,7 @@ public class TicketTests
         var ticketId = await CreateTicketAndGetId();
         var userId = await CreateUser();
 
-        var response = await client.PostAsJsonAsync($"/tickets/{ticketId}/comments", new AddCommentHttpRequest
+        var response = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/comments", new AddCommentHttpRequest
         {
             Text = string.Empty,
             UserId = userId
@@ -278,7 +278,7 @@ public class TicketTests
         var userId = await CreateUser();
         await Solve(ticketId);
 
-        var response = await client.PostAsJsonAsync($"/tickets/{ticketId}/comments", new AddCommentHttpRequest
+        var response = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/comments", new AddCommentHttpRequest
         {
             Text = "Valid text to comment",
             UserId = userId
@@ -298,7 +298,7 @@ public class TicketTests
         var client = _factory.CreateClient();
         var ticketId = await CreateTicketAndGetId();
 
-        var response = await client.PostAsync($"/tickets/{ticketId}/solve", null);
+        var response = await client.PostAsync($"/api/tickets/{ticketId}/solve", null);
 
         response.EnsureSuccessStatusCode();
 
@@ -312,7 +312,7 @@ public class TicketTests
     {
         var client = _factory.CreateClient();
 
-        var response = await client.PostAsync($"/tickets/0/solve", null);
+        var response = await client.PostAsync($"/api/tickets/0/solve", null);
 
         response.EnsureSuccessStatusCode();
 
@@ -329,7 +329,7 @@ public class TicketTests
         var ticketId = await CreateTicketAndGetId();
         await Solve(ticketId);
 
-        var response = await client.PostAsync($"/tickets/{ticketId}/solve", null);
+        var response = await client.PostAsync($"/api/tickets/{ticketId}/solve", null);
 
         response.EnsureSuccessStatusCode();
 

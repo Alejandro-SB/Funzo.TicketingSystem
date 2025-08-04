@@ -15,12 +15,15 @@ public class GetTicket : IUseCase<GetTicketRequest, Option<GetTicketResponse>>
 
     public async Task<Option<GetTicketResponse>> Handle(GetTicketRequest request, CancellationToken cancellationToken)
     {
-        var ticket = await _context.Tickets.Where(t => t.Id == request.Id).Select(t => new GetTicketResponse(t.Id, t.Subject, t.Body)).FirstOrDefaultAsync(cancellationToken);
+        var ticket = await _context.Tickets
+            .Where(t => t.Id == request.Id)
+            .Select(t => new GetTicketResponse(t.Id, t.Subject, t.Body, t.Comments.Select(c => new TicketComment(c.UserId, c.User.DisplayName, c.Text))))
+            .FirstOrDefaultAsync(cancellationToken);
 
         return Option.FromValue(ticket);
     }
 }
 
 public record GetTicketRequest(int Id);
-
-public record GetTicketResponse(int Id, string Subject, string Body);
+public record TicketComment(int UserId, string DisplayName, string Text);
+public record GetTicketResponse(int Id, string Subject, string Body, IEnumerable<TicketComment> Comments);

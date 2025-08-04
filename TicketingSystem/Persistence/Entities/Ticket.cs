@@ -12,4 +12,6 @@ public class Ticket : BaseEntity
     public required int UserId { get; set; }
 
     public User User { get; set; } = null!;
+
+    public ICollection<Comment> Comments { get; set; } = [];
 }

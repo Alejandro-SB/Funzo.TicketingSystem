@@ -27,7 +27,7 @@ public class UsersTests
             DisplayName = "Valid user name"
         };
 
-        var response = await client.PostAsJsonAsync("/users", request);
+        var response = await client.PostAsJsonAsync("/api/users", request);
 
         response.EnsureSuccessStatusCode();
 
@@ -47,7 +47,7 @@ public class UsersTests
             DisplayName = "Valid user name"
         };
 
-        var response = await client.PostAsJsonAsync("/users", request);
+        var response = await client.PostAsJsonAsync("/api/users", request);
 
         response.EnsureSuccessStatusCode();
 
@@ -69,7 +69,7 @@ public class UsersTests
             DisplayName = ""
         };
 
-        var response = await client.PostAsJsonAsync("/users", request);
+        var response = await client.PostAsJsonAsync("/api/users", request);
 
         response.EnsureSuccessStatusCode();
 
@@ -94,7 +94,7 @@ public class UsersTests
             DisplayName = "Valid display name"
         };
 
-        var response = await client.PostAsJsonAsync("/users", request);
+        var response = await client.PostAsJsonAsync("/api/users", request);
 
         response.EnsureSuccessStatusCode();
 
@@ -103,7 +103,7 @@ public class UsersTests
         Assert.NotNull(result);
         Assert.True(result.IsErr(out var err));
 
-        Assert.True(err.Is<UserNameAlreadyExists>(out _));
+        Assert.True(err.Is<UsernameAlreadyExists>(out _));
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public class UsersTests
         var userId = await CreateUser(username);
         var client = _factory.CreateClient();
 
-        var response = await client.GetFromJsonAsync<Option<GetUserResponse>>($"/users/{userId}", HttpClientExtensions.Options);
+        var response = await client.GetFromJsonAsync<Option<GetUserResponse>>($"/api/users/{userId}", HttpClientExtensions.Options);
 
         Assert.True(response.IsSome(out var user));
         Assert.Equal(username, user.Username);
@@ -124,7 +124,7 @@ public class UsersTests
     {
         var client = _factory.CreateClient();
 
-        var response = await client.GetFromJsonAsync<Option<GetUserResponse>>("/users/0", HttpClientExtensions.Options);
+        var response = await client.GetFromJsonAsync<Option<GetUserResponse>>("/api/users/0", HttpClientExtensions.Options);
 
         Assert.False(response.IsSome(out var user));
     }
