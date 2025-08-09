@@ -1,5 +1,5 @@
 import { useApi } from './api';
-import type { Result } from '../types/utils';
+import type { Result, Union } from '../types/utils';
 import { type Option } from '../types/utils';
 import { useAuth } from 'src/composables/useAuth';
 export type GetAllTicketsResponse = {
@@ -22,55 +22,35 @@ export type GetTicketResponse = {
   };
 };
 
-export type TicketNotFoundError = {
-  TicketNotFound: object;
-};
-
-export type UserNotFoundError = {
-  UserNotFound: object;
-};
-
-export type InvalidCommentText = {
-  InvalidCommentText: object;
-};
-
-export type TicketAlreadySolved = {
-  TicketAlreadySolved: {
-    resolutionDate: string;
-  };
-};
-
-export type TicketAlreadyEscalated = {
-  TicketAlreadyEscalated: object;
-};
-
-export type InvalidTicketBodyError = {
-  InvalidTicketBody: {
-    reason: string;
-  };
-};
-
-export type InvalidTicketSubjectError = {
-  InvalidTicketSubject: {
-    reason: string;
-  };
-};
+export type TicketNotFoundError = Union<'TicketNotFound', object>;
+export type UserNotFoundError = Union<'UserNotFound', object>;
+export type InvalidCommentTextError = Union<'InvalidCommentText', object>;
+export type TicketAlreadySolvedError = Union<'TicketAlreadySolved', { resolutionDate: string }>;
+export type TicketAlreadyEscalatedError = Union<'TicketAlreadyEscalated', object>;
+export type InvalidTicketBodyError = Union<'InvalidTicketBody', { reason: string }>;
+export type InvalidTicketSubjectError = Union<'InvalidTicketSubject', { reason: string }>;
 
 type AddCommentToTicketError =
   | TicketNotFoundError
   | UserNotFoundError
-  | InvalidCommentText
-  | TicketAlreadySolved;
+  | InvalidCommentTextError
+  | TicketAlreadySolvedError;
 
-type EscalateTicketError = TicketAlreadyEscalated | TicketAlreadySolved | TicketNotFoundError;
+type EscalateTicketError =
+  | TicketAlreadyEscalatedError
+  | TicketAlreadySolvedError
+  | TicketNotFoundError;
 
-type SolveTicketError = TicketNotFoundError | TicketAlreadySolved;
+type SolveTicketError = TicketNotFoundError | TicketAlreadySolvedError;
 
-type CreateTicketError = UserNotFoundError | InvalidTicketBodyError | InvalidTicketSubjectError;
+export type CreateTicketError =
+  | UserNotFoundError
+  | InvalidTicketBodyError
+  | InvalidTicketSubjectError;
 
 export const useTicketsApi = () => {
   const api = useApi();
-  const { userId } = useAuth();
+  const { user } = useAuth();
 
   const getAllTickets = () => {
     return api.get<GetAllTicketsResponse>('/api/tickets');
@@ -84,14 +64,14 @@ export const useTicketsApi = () => {
     return api.post<Result<number, CreateTicketError>>('/api/tickets', {
       subject,
       body,
-      userId: userId.value,
+      userId: user.value.id,
     });
   };
 
   const addComment = (id: number, text: string) => {
     return api.post<Result<void, AddCommentToTicketError>>(`/api/tickets/${id}/comments`, {
       text,
-      userId: userId.value,
+      userId: user.value.id,
     });
   };
 

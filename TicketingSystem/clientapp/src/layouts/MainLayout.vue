@@ -21,7 +21,7 @@ const leftDrawerOpen = ref(false);
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
-const { isRegistered } = useAuth();
+const { isRegistered, user } = useAuth();
 </script>
 <template>
   <q-layout view="lHh Lpr lFf">
@@ -35,7 +35,7 @@ const { isRegistered } = useAuth();
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list v-if="isRegistered">
-        <q-item-label header> </q-item-label>
+        <q-item-label header>Registered as {{ user.displayName }}</q-item-label>
 
         <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
       </q-list>

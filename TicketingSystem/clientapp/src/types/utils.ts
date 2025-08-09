@@ -21,15 +21,19 @@ type ErrResult<TErr> = {
   err: TErr;
 };
 
-export type Err<TErr extends string, TErrP> = Record<TErr, TErrP>;
+export type Union<Tag extends string, T> = {
+  tag: Tag;
+  value: T;
+};
 
-// export type UnionToFunc<U extends Err<TErr, TErrP>, TErr extends string, TErrP, TOut> = {
-//   readonly [key in keyof U]: (x: TErrP) => TOut;
-// };
+type Handlers<U extends { tag: string; value: unknown }, R> = {
+  [K in U['tag']]: (value: Extract<U, { tag: K }>['value']) => R;
+};
 
-export type UnionToFunc<U, TOut> =
-  U extends Err<infer _, infer TPayload>
-    ? {
-        readonly [key in keyof U]: (x: TPayload) => TOut;
-      }
-    : never;
+export const handleUnion = <U extends { tag: string; value: unknown }, R>(
+  handlers: Handlers<U, R>,
+  union: U,
+) => {
+  const handler = handlers[union.tag as U['tag']];
+  return handler(union.value);
+};

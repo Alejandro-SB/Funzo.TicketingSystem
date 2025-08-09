@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { QTable, useQuasar } from 'quasar';
 import CreateNewTicketDialog from 'src/components/CreateNewTicketDialog.vue';
-import type { GetAllTicketsTicket } from 'src/data/useTicketsApi';
+import { useAuth } from 'src/composables/useAuth';
+import type { GetAllTicketsTicket, CreateTicketError } from 'src/data/useTicketsApi';
 import { useTicketsApi } from 'src/data/useTicketsApi';
+import { handleUnion } from 'src/types/utils';
 import type { ComponentInstance } from 'vue';
 import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 type ColumnType = ComponentInstance<typeof QTable>['$props']['columns'];
 
@@ -12,7 +15,8 @@ const selectedRows = ref([]);
 const rows = ref<GetAllTicketsTicket[]>([]);
 
 const { getAllTickets, create } = useTicketsApi();
-
+const { isRegistered } = useAuth();
+const router = useRouter();
 const $q = useQuasar();
 const onDelete = () => {};
 const onCreateNew = () => {
@@ -20,8 +24,32 @@ const onCreateNew = () => {
     component: CreateNewTicketDialog,
     title: 'Create new ticket',
     componentProps: {},
-  }).onOk(({ subject, body }) => {
-    create(subject, body).catch(() => {});
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  }).onOk(async ({ subject, body }) => {
+    const response = await create(subject, body);
+
+    if (response.isOk) {
+      $q.notify({
+        type: 'positive',
+        message: 'Ticket created',
+      });
+
+      await router.push(`/tickets/${response.ok}`);
+    } else {
+      const message = handleUnion<CreateTicketError, string>(
+        {
+          InvalidTicketBody: (e) => e.reason,
+          InvalidTicketSubject: (e) => e.reason,
+          UserNotFound: () => 'User not found',
+        },
+        response.err,
+      );
+
+      $q.notify({
+        type: 'negative',
+        message,
+      });
+    }
   });
 };
 
@@ -46,6 +74,11 @@ const columns: ColumnType = [
 ];
 
 onMounted(async () => {
+  if (!isRegistered.value) {
+    await router.push('/');
+    return;
+  }
+
   const { tickets } = await getAllTickets();
   rows.value = tickets;
 });
