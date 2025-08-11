@@ -10,12 +10,14 @@ namespace TicketingSystem.Controllers
         private readonly CreateUser _createUser;
         private readonly GetUser _getUser;
         private readonly GetUserComments _getUserComments;
+        private readonly GetAllUsers _getAllUsers;
 
-        public UsersController(CreateUser createUser, GetUser getUser, GetUserComments getUserComments)
+        public UsersController(CreateUser createUser, GetUser getUser, GetUserComments getUserComments, GetAllUsers getAllUsers)
         {
             _createUser = createUser;
             _getUser = getUser;
             _getUserComments = getUserComments;
+            _getAllUsers = getAllUsers;
         }
 
         [HttpGet("{id:int}")]
@@ -44,6 +46,16 @@ namespace TicketingSystem.Controllers
             var request = new GetUserCommentsRequest(id);
 
             var response = await _getUserComments.Handle(request, cancellationToken);
+
+            return Results.Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<IResult> GetAllUsers(CancellationToken cancellationToken)
+        {
+            var request = new GetAllUsersRequest();
+
+            var response = await _getAllUsers.Handle(request, cancellationToken);
 
             return Results.Ok(response);
         }

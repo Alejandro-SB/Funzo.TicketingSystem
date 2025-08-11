@@ -9,26 +9,18 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/tickets',
         component: () => import('pages/TicketsPage.vue'),
-        children: [
-          {
-            path: ':id',
-            component: () => import('pages/TicketDetailPage.vue'),
-          },
-        ],
+      },
+      {
+        path: '/tickets/:id',
+        component: () => import('pages/TicketDetailPage.vue'),
       },
       {
         path: '/users',
         component: () => import('pages/UsersPage.vue'),
-        children: [
-          {
-            path: ':id',
-            component: () => import('pages/UserDetailPage.vue'),
-          },
-          {
-            path: ':id/comments',
-            component: () => import('pages/UserCommentsPage.vue'),
-          },
-        ],
+      },
+      {
+        path: '/users/:id',
+        component: () => import('pages/UserDetailPage.vue'),
       },
     ],
   },
@@ -37,6 +29,7 @@ const routes: RouteRecordRaw[] = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
+    name: 'not-found',
     component: () => import('pages/ErrorNotFound.vue'),
   },
 ];

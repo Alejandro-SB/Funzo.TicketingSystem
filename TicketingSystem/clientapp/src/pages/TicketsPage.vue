@@ -11,7 +11,7 @@ import { useRouter } from 'vue-router';
 
 type ColumnType = ComponentInstance<typeof QTable>['$props']['columns'];
 
-const selectedRows = ref([]);
+const selectedRows = ref<GetAllTicketsTicket[]>([]);
 const rows = ref<GetAllTicketsTicket[]>([]);
 
 const { getAllTickets, create } = useTicketsApi();
@@ -100,7 +100,7 @@ const hasSelection = computed(() => selected.value !== undefined);
       <template #top-right>
         <div class="q-gutter-x-md row justify-end">
           <q-btn @click="onDelete" icon="delete" class="q-m-4" flat :disabled="!hasSelection" />
-          <q-btn @click="onDelete" icon="edit" flat :disabled="!hasSelection" />
+          <q-btn :to="`/tickets/${selected?.id}`" :disable="!hasSelection" flat class="q-m-4" />
           <q-btn @click="onCreateNew" icon="add" flat />
         </div>
       </template>

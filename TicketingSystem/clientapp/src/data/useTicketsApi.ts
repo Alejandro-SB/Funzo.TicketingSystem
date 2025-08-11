@@ -19,7 +19,7 @@ export type GetTicketResponse = {
     userId: number;
     displayName: string;
     text: string;
-  };
+  }[];
 };
 
 export type TicketNotFoundError = Union<'TicketNotFound', object>;
@@ -30,13 +30,13 @@ export type TicketAlreadyEscalatedError = Union<'TicketAlreadyEscalated', object
 export type InvalidTicketBodyError = Union<'InvalidTicketBody', { reason: string }>;
 export type InvalidTicketSubjectError = Union<'InvalidTicketSubject', { reason: string }>;
 
-type AddCommentToTicketError =
+export type AddCommentToTicketError =
   | TicketNotFoundError
   | UserNotFoundError
   | InvalidCommentTextError
   | TicketAlreadySolvedError;
 
-type EscalateTicketError =
+export type EscalateTicketError =
   | TicketAlreadyEscalatedError
   | TicketAlreadySolvedError
   | TicketNotFoundError;

@@ -40,6 +40,16 @@ export type GetAllUsersUser = {
   userComments: number;
 };
 
+type GetUserCommentsResponse = {
+  comments: UserComment[];
+};
+
+export type UserComment = {
+  ticketId: number;
+  text: string;
+  date: string;
+};
+
 export const useUsersApi = () => {
   const api = useApi();
   const createUser = (username: string, displayName: string) => {
@@ -57,5 +67,9 @@ export const useUsersApi = () => {
     return api.get<GetAllUsersResponse>('/api/users');
   };
 
-  return { createUser, getUser, getAllUsers };
+  const getUserComments = (userId: number) => {
+    return api.get<GetUserCommentsResponse>(`/api/users/${userId}/comments`);
+  };
+
+  return { createUser, getUser, getAllUsers, getUserComments };
 };

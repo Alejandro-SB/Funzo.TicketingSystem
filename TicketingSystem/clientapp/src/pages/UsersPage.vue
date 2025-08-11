@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { QTable } from 'quasar';
-import type { GetAllUsersUser } from 'src/data/useUsersApi';
-import { computed, ref, type ComponentInstance } from 'vue';
+import { useUsersApi, type GetAllUsersUser } from 'src/data/useUsersApi';
+import { computed, onMounted, ref, type ComponentInstance } from 'vue';
 
 type ColumnType = ComponentInstance<typeof QTable>['$props']['columns'];
 const columns: ColumnType = [
@@ -36,18 +36,23 @@ const columns: ColumnType = [
     field: 'userComments',
     required: true,
     label: 'User Comments',
-    format: (val: string) => `${val.substring(0, 50)}...`,
     sortable: true,
     align: 'left',
   },
 ];
 
-const selectedRows = ref([]);
+const selectedRows = ref<GetAllUsersUser[]>([]);
 const rows = ref<GetAllUsersUser[]>([]);
 const selected = computed(() => selectedRows.value[0]);
 const hasSelection = computed(() => selected.value !== undefined);
 
-const onEdit = () => {};
+const { getAllUsers } = useUsersApi();
+
+onMounted(async () => {
+  const users = await getAllUsers();
+
+  rows.value = users.users;
+});
 const onDelete = () => {};
 </script>
 
@@ -64,7 +69,14 @@ const onDelete = () => {};
       <template #top-right>
         <div class="q-gutter-x-md row justify-end">
           <q-btn @click="onDelete" icon="delete" class="q-m-4" flat :disabled="!hasSelection" />
-          <q-btn @click="onEdit" icon="edit" flat :disabled="!hasSelection" />
+          <q-btn
+            :to="`/users/${selected?.id}`"
+            :disable="!hasSelection"
+            icon="edit"
+            flat
+            class="q-m-4"
+            @click="() => {}"
+          />
         </div>
       </template>
     </q-table>
