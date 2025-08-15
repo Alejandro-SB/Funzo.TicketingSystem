@@ -8,13 +8,14 @@ export type GetAllTicketsResponse = {
 export type GetAllTicketsTicket = {
   id: number;
   subject: string;
-  body: string;
   totalComments: number;
 };
+
 export type GetTicketResponse = {
   id: number;
   subject: string;
-  body: string;
+  isEscalated: boolean;
+  resolutionDate: string;
   comments: {
     userId: number;
     displayName: string;
@@ -41,7 +42,7 @@ export type EscalateTicketError =
   | TicketAlreadySolvedError
   | TicketNotFoundError;
 
-type SolveTicketError = TicketNotFoundError | TicketAlreadySolvedError;
+export type SolveTicketError = TicketNotFoundError | TicketAlreadySolvedError;
 
 export type CreateTicketError =
   | UserNotFoundError

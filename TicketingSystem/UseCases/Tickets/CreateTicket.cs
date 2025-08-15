@@ -36,11 +36,16 @@ public class CreateTicket : IUseCase<CreateTicketRequest, CreateTicketResult>
         var ticket = new Ticket
         {
             Subject = request.Subject,
-            Body = request.Body,
-            UserId = request.UserId
+            Comments = [new Comment
+            {
+                Date = DateTime.UtcNow,
+                Text = request.Body,
+                TicketId = 0,
+                UserId = request.UserId
+            }]
         };
 
-        _context.Add(ticket);
+         _context.Add(ticket);
 
         await _context.SaveChangesAsync(cancellationToken);
 

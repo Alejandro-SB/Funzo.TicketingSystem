@@ -346,8 +346,13 @@ public class TicketTests
         var ticket = new Ticket
         {
             Subject = "I have a problem",
-            Body = "Please help me. I cannot continue to the next screen. Something has happened that is not allowing me to move forward. Please help thanks!",
-            UserId = 0
+            Comments = [new Comment
+            {
+                Date = DateTime.Now,
+                Text = "Please help me. I cannot continue to the next screen. Something has happened that is not allowing me to move forward. Please help thanks!",
+                UserId = 0,
+                TicketId = 0
+            }]
         };
 
         context.Tickets.Add(ticket);

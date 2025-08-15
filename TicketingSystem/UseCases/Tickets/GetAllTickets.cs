@@ -15,7 +15,7 @@ public class GetAllTickets : IUseCase<GetAllTicketsRequest, GetAllTicketsRespons
 
     public async Task<GetAllTicketsResponse> Handle(GetAllTicketsRequest request, CancellationToken cancellationToken)
     {
-        var tickets = await _context.Tickets.Select(t => new GetAllTicketsTicket(t.Id, t.Subject, t.Body, t.Comments.Count)).ToListAsync(cancellationToken);
+        var tickets = await _context.Tickets.Select(t => new GetAllTicketsTicket(t.Id, t.Subject, t.Comments.Count)).ToListAsync(cancellationToken);
 
         return new GetAllTicketsResponse(tickets);
     }
@@ -23,6 +23,6 @@ public class GetAllTickets : IUseCase<GetAllTicketsRequest, GetAllTicketsRespons
 
 
 public record GetAllTicketsRequest;
-public record GetAllTicketsTicket(int Id, string Subject, string Body, int TotalComments);
+public record GetAllTicketsTicket(int Id, string Subject, int TotalComments);
 
 public record GetAllTicketsResponse(IEnumerable<GetAllTicketsTicket> Tickets);

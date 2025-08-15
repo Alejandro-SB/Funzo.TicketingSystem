@@ -18,7 +18,6 @@ const { getAllTickets, create } = useTicketsApi();
 const { isRegistered } = useAuth();
 const router = useRouter();
 const $q = useQuasar();
-const onDelete = () => {};
 const onCreateNew = () => {
   $q.dialog({
     component: CreateNewTicketDialog,
@@ -55,19 +54,18 @@ const onCreateNew = () => {
 
 const columns: ColumnType = [
   {
-    name: 'subject',
-    field: 'subject',
+    name: 'id',
+    field: 'id',
     required: true,
-    label: 'Subject',
+    label: 'Id',
     sortable: true,
     align: 'left',
   },
   {
-    name: 'body',
-    field: 'body',
+    name: 'subject',
+    field: 'subject',
     required: true,
-    label: 'Body',
-    format: (val: string) => `${val.substring(0, 50)}...`,
+    label: 'Subject',
     sortable: true,
     align: 'left',
   },
@@ -99,8 +97,13 @@ const hasSelection = computed(() => selected.value !== undefined);
     >
       <template #top-right>
         <div class="q-gutter-x-md row justify-end">
-          <q-btn @click="onDelete" icon="delete" class="q-m-4" flat :disabled="!hasSelection" />
-          <q-btn :to="`/tickets/${selected?.id}`" :disable="!hasSelection" flat class="q-m-4" />
+          <q-btn
+            :to="`/tickets/${selected?.id}`"
+            :disable="!hasSelection"
+            flat
+            class="q-m-4"
+            icon="edit"
+          />
           <q-btn @click="onCreateNew" icon="add" flat />
         </div>
       </template>

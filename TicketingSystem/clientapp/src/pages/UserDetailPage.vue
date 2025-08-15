@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { QTable } from 'quasar';
 import { useUsersApi, type UserComment } from 'src/data/useUsersApi';
-import { toParam } from 'src/utils';
+import { formatDate, toParam } from 'src/utils';
 import { onMounted, ref, type ComponentInstance } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -30,7 +30,7 @@ const columns: ColumnType = [
     required: true,
     label: 'Date',
     // Not the best way, but easier
-    format: (val: string) => new Intl.DateTimeFormat().format(new Date(val)),
+    format: (val: string) => formatDate(val),
     sortable: true,
     align: 'left',
   },

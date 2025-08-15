@@ -53,7 +53,6 @@ onMounted(async () => {
 
   rows.value = users.users;
 });
-const onDelete = () => {};
 </script>
 
 <template>
@@ -68,7 +67,6 @@ const onDelete = () => {};
     >
       <template #top-right>
         <div class="q-gutter-x-md row justify-end">
-          <q-btn @click="onDelete" icon="delete" class="q-m-4" flat :disabled="!hasSelection" />
           <q-btn
             :to="`/users/${selected?.id}`"
             :disable="!hasSelection"
